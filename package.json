@@ -22,6 +22,7 @@
     "mongoose": "^8.4.4",
     "morgan": "^1.10.0",
     "prettier": "^3.3.2",
+    "shortid": "^2.2.16",
     "winston": "^3.13.0"
   }
 }

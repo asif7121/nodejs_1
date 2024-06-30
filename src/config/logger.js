@@ -1,11 +1,12 @@
-import winston from "winston";
-
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.errors({ stack: true }),
-    winston.format.label({ label: "[LOGGER]" }),
-    winston.format.timestamp({ format: "YY-MM-DD HH:MM:SS" }),
-    winston.format.printf(
+import {createLogger, format, transports} from "winston";
+const {combine, errors, label, timestamp, colorize, printf} = format
+const logger = createLogger({
+  format: combine(
+    errors({ stack: true }),
+    label({ label: "[LOGGER]" }),
+    timestamp( { format: "YY-MM-DD HH:MM:SS" } ),
+    colorize(),
+    printf(
       (log) =>
         ` ${log.label}  ${log.timestamp}  ${log.level} : ${log.message} ${
           log.stack ? log.stack : ""
@@ -13,7 +14,7 @@ const logger = winston.createLogger({
     )
   ),
   transports: [
-    new winston.transports.File({
+    new transports.File({
       level: "info",
       filename: "./logs/all-logs.log",
       handleExceptions: true,
@@ -22,8 +23,8 @@ const logger = winston.createLogger({
       maxFiles: 5, // if log file size is greater than 5MB, logfile2 is generated
       colorize: true,
     }),
-    new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize({ all: true })),
+    new transports.Console({
+      format: combine(colorize({ all: true })),
       level: "debug",
       handleExceptions: true,
       json: false,
@@ -32,7 +33,7 @@ const logger = winston.createLogger({
     }),
   ],
   exceptionHandlers: [
-    new winston.transports.File({
+    new transports.File({
       filename: "./logs/exceptions.log",
       timestamp: true,
       maxsize: 5242880,
